@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
-const CREDS = require('./creds');
+const customers = require('./customers');
+const config = require('./config.json');
 
 let page;
 
@@ -70,15 +71,23 @@ const clickXPath = async (xpath, options, extraTimeout, hasNavigation) => {
 
 const clickEvaluate = async (selector, extraTimeout, hidden, hasNavigation) => {
     let waitForNavigationPromise;
+    let hasElement = false;
 
     try {
         if (extraTimeout && typeof extraTimeout === 'number') {
             await page.waitFor(extraTimeout);
         }
 
-        const hasElement = await page.evaluate((s) => !!document.querySelector(s), selector);
-        if (!hasElement) {
-            return hasElement;
+        // hasElement = await page.evaluate((s) => !!document.querySelector(s), selector);
+        // if (!hasElement) {
+        //     return hasElement;
+        // }
+
+        try {
+            await page.waitForSelector(selector, {visible: true, timeout: 1000})
+            hasElement = true;
+        } catch(err) {
+            return false;
         }
 
         if (hasNavigation) {
@@ -104,9 +113,9 @@ const clickEvaluate = async (selector, extraTimeout, hidden, hasNavigation) => {
 };
 
 const run = async () => {
-    const width = 1400;
-    const height = 800;
-    const timeout = 300 * 1000; //second
+    const width = config.windowWidth;
+    const height = config.windowHeight;
+    const timeout = config.timeout * 1000;
     const browser = await puppeteer.launch({
         headless: false,
         args: [
@@ -116,17 +125,16 @@ const run = async () => {
     page = await browser.newPage();
     await page.setViewport({ width, height });
     await page.setDefaultNavigationTimeout(timeout);
-    await page.goto('https://citrix.cloud.com');
+    await page.goto(config.siteUrl);
 
     const USERNAME_SELECTOR = '#username';
-    const PASSWORD_SELECTOR = '#password';
-    
     await page.waitFor(USERNAME_SELECTOR, {visible: true, timeout: timeout});
     await page.click(USERNAME_SELECTOR);
-    await page.keyboard.type(CREDS.username);
+    await page.keyboard.type(customers[3].username);
     
+    const PASSWORD_SELECTOR = '#password';
     await page.click(PASSWORD_SELECTOR);
-    await page.keyboard.type(CREDS.password);
+    await page.keyboard.type(customers[3].password);
     
     const SIGNIN_SELECTOR = '#submit';
     await clickSelector(SIGNIN_SELECTOR, {visible: true, timeout: timeout}, 0, true);
