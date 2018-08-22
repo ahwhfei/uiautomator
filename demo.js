@@ -112,6 +112,22 @@ const clickEvaluate = async (selector, extraTimeout, hidden, hasNavigation) => {
     }
 };
 
+const typeSelector = async (selector, data, options) => {
+    try {
+        if (typeof options === 'object') {
+            await page.waitFor(selector, options);
+        } else {
+            await page.waitFor(selector);
+        }
+        await page.click(selector);
+        await page.keyboard.type(data);
+    } catch (err) {
+        console.error(`ClickEvaluate Selector: "${selector}" Exception!`);
+        console.error(err);
+        throw new Error('Exist Exception! STOPPED!!!');
+    }
+};
+
 const run = async () => {
     const width = config.windowWidth;
     const height = config.windowHeight;
@@ -128,14 +144,11 @@ const run = async () => {
     await page.goto(config.siteUrl);
 
     const USERNAME_SELECTOR = '#username';
-    await page.waitFor(USERNAME_SELECTOR, {visible: true, timeout: timeout});
-    await page.click(USERNAME_SELECTOR);
-    await page.keyboard.type(customers[3].username);
-    
+    await typeSelector(USERNAME_SELECTOR, customers[0].username, {visible: true, timeout: timeout})
+
     const PASSWORD_SELECTOR = '#password';
-    await page.click(PASSWORD_SELECTOR);
-    await page.keyboard.type(customers[3].password);
-    
+    await typeSelector(PASSWORD_SELECTOR, customers[0].password, {visible: true, timeout: timeout});
+
     const SIGNIN_SELECTOR = '#submit';
     await clickSelector(SIGNIN_SELECTOR, {visible: true, timeout: timeout}, 0, true);
 
