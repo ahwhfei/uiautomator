@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const ActionExecution = require('./action-execution');
 const TMActionExecution = require('./tm-action-execution');
 const creds = require('./data/customers');
