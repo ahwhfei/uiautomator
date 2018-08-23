@@ -26,6 +26,7 @@ class ActionExecution {
         
         let canExecuteNextAction = undefined;
         for (const action of actionList) {
+            console.log(`Start: ${action.description}`);
             if ((action.checkLatestActionResult && canExecuteNextAction)
                 || !action.checkLatestActionResult) {
                 canExecuteNextAction = await this._execute(pageOps, action);
@@ -40,21 +41,22 @@ class ActionExecution {
         let options = {timeout};
         action.visible && (options.visible = action.visible);
         let hasElement = false;
-        
+
         switch(action.type) {
             case ActionType.click:
-                await pageOps.clickSelector(action.selector, options, action.delay, action.navigation);
-                hasElement = true;
-                break;
+            await pageOps.clickSelector(action, options, action.delay, action.navigation);
+            hasElement = true;
+            break;
             case ActionType.type:
-                await pageOps.typeSelector(action.selector, action.data, options);
-                hasElement = true;
-                break;
+            await pageOps.typeSelector(action, action.data, options);
+            hasElement = true;
+            break;
             case ActionType.evaluate:
-                hasElement = await pageOps.clickEvaluate(action.selector, action.delay, action.hidden, action.navigation);
-                break;
+            hasElement = await pageOps.clickEvaluate(action, action.delay, action.hidden, action.navigation);
+            break;
         }
-    
+        
+        console.log(`End: ${action.description}`);
         return hasElement;
     }
 }

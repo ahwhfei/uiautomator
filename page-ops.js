@@ -3,14 +3,14 @@ class PageOps {
         this.page = page;
     }
 
-    async clickSelector (selector, options, delay, hasNavigation) {
+    async clickSelector (action, options, delay, hasNavigation) {
         let waitForNavigationPromise;
     
         try {
             if (typeof options === 'object') {
-                await this.page.waitFor(selector, options);
+                await this.page.waitFor(action.selector, options);
             } else {
-                await this.page.waitFor(selector);
+                await this.page.waitFor(action.selector);
             }
     
             if (delay && typeof delay === 'number') {
@@ -21,13 +21,13 @@ class PageOps {
                 waitForNavigationPromise = this.page.waitForNavigation();
             }
     
-            await this.page.click(selector);
+            await this.page.click(action.selector);
     
             if (hasNavigation) {
                 await waitForNavigationPromise;
             }
         } catch(err) {
-            console.error(`Click Selector: "${selector}" Exception!`);
+            console.error(`Click Action Exception: ${action.description}`);
             console.error(err);
             throw new Error('Exist Exception! STOPPED!!!');
         }
@@ -40,7 +40,7 @@ class PageOps {
             if (typeof options === 'object') {
                 await this.page.waitForXPath(xpath, options);
             } else {
-                await this.page.waitForXPath(selector);
+                await this.page.waitForXPath(action.xpath);
             }
     
             if (delay && typeof delay === 'number') {
@@ -62,13 +62,13 @@ class PageOps {
                 await waitForNavigationPromise;
             }
         } catch(err) {
-            console.error(`Click XPath: "${selector}" Exception!`);
+            console.error(`Click Action Exception: ${action.description}`);
             console.error(err);
             throw new Error('Exist Exception! STOPPED!!!');
         }
     }
     
-    async clickEvaluate (selector, delay, hidden, hasNavigation) {
+    async clickEvaluate (action, delay, hidden, hasNavigation) {
         let waitForNavigationPromise;
         let hasElement = false;
     
@@ -77,13 +77,13 @@ class PageOps {
                 await this.page.waitFor(delay);
             }
     
-            // hasElement = await this.page.evaluate((s) => !!document.querySelector(s), selector);
+            // hasElement = await this.page.evaluate((s) => !!document.querySelector(s), action.selector);
             // if (!hasElement) {
             //     return hasElement;
             // }
     
             try {
-                await this.page.waitForSelector(selector, {visible: true, timeout: 1000})
+                await this.page.waitForSelector(action.selector, {visible: true, timeout: 1000})
                 hasElement = true;
             } catch(err) {
                 return false;
@@ -93,10 +93,13 @@ class PageOps {
                 waitForNavigationPromise = this.page.waitForNavigation();
             }
     
-            await this.page.click(selector);
-    
+            let waitForSelectorHiddenPromise;
             if (hidden) {
-                await this.page.waitForSelector(selector, {hidden: true});
+                waitForSelectorHiddenPromise = this.page.waitForSelector(action.selector, {hidden: true, timeout: 180000});
+            }
+            await this.page.click(action.selector);
+            if (hidden) {
+                await waitForSelectorHiddenPromise;
             }
     
             if (hasNavigation) {
@@ -105,23 +108,23 @@ class PageOps {
     
             return hasElement;
         } catch(err) {
-            console.error(`ClickEvaluate Selector: "${selector}" Exception!`);
+            console.error(`ClickEvaluate Action Exception: ${action.description}`);
             console.error(err);
             throw new Error('Exist Exception! STOPPED!!!');
         }
     }
     
-    async typeSelector (selector, data, options) {
+    async typeSelector (action, data, options) {
         try {
             if (typeof options === 'object') {
-                await this.page.waitFor(selector, options);
+                await this.page.waitFor(action.selector, options);
             } else {
-                await this.page.waitFor(selector);
+                await this.page.waitFor(action.selector);
             }
-            await this.page.click(selector);
+            await this.page.click(action.selector);
             await this.page.keyboard.type(data);
         } catch (err) {
-            console.error(`ClickEvaluate Selector: "${selector}" Exception!`);
+            console.error(`Type Action Exception: ${action.description}`);
             console.error(err);
             throw new Error('Exist Exception! STOPPED!!!');
         }
