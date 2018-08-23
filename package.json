@@ -9,6 +9,9 @@
   "dependencies": {
     "puppeteer": "^1.6.2"
   },
-  "author": "",
+  "bin": {
+    "uiautomator": "index.js"
+  },
+  "author": "hongfei.wu@citrix.com",
   "license": "ISC"
 }
