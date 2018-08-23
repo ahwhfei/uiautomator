@@ -5,9 +5,15 @@ const PageOps = require('./page-ops');
 
 const timeout = config.timeout * 1000;
 
-class TMActionExecution {
+let instanceCount = 0;
 
-    async run (actionList) {
+class TMActionExecution {
+    constructor(actions) {
+        this.actionList = actions;
+        this.instanceID = instanceCount++;
+    }
+
+    async run () {
         const width = config.windowWidth;
         const height = config.windowHeight;
         const browser = await puppeteer.launch({
@@ -24,8 +30,8 @@ class TMActionExecution {
 
         const pageOps = new PageOps(page);
         
-        for (const action of actionList) {
-            console.log(`Start: ${action.description}`);
+        for (const action of this.actionList) {
+            console.log(`InstanceID-${this.instanceID} Start: ${action.description}`);
             await this._execute(pageOps, action);
         }
     
@@ -34,16 +40,13 @@ class TMActionExecution {
     }
 
     async _execute (pageOps, action) {
-        let options = {timeout};
-        action.visible && (options.visible = action.visible);
-
         if (action.textbox) {
             await pageOps.typeXPath('/' + action.data, action.value, undefined, action.interval * 1000);
         } else {
             await pageOps.clickXPath('/' + action.data, undefined, action.interval * 1000, action.navigation);
         }
 
-        console.log(`End: ${action.description}`);
+        console.log(`InstanceID-${this.instanceID} End: ${action.description}`);
     }
 }
 

@@ -14,10 +14,9 @@ const execution = new ActionExecution();
 // execution.run(actionList8_qiandev33);
 // execution.run(actionList_xpath);
 
-const tmExecution = new TMActionExecution();
-tmExecution.run(tmActionList);
-tmExecution.run(tmActionList);
-tmExecution.run(tmActionList);
-tmExecution.run(tmActionList);
-tmExecution.run(tmActionList);
-tmExecution.run(tmActionList);
+const tmExecution1 = new TMActionExecution(tmActionList);
+tmExecution1.run();
+const tmExecution2 = new TMActionExecution(tmActionList);
+tmExecution2.run();
+const tmExecution3 = new TMActionExecution(tmActionList);
+tmExecution3.run();
