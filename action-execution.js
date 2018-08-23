@@ -44,16 +44,24 @@ class ActionExecution {
 
         switch(action.type) {
             case ActionType.click:
-            await pageOps.clickSelector(action, options, action.delay, action.navigation);
-            hasElement = true;
-            break;
+                if (action.xpath) {
+                    await pageOps.clickXPath(action.xpath, options, action.delay, action.navigation);
+                } else {
+                    await pageOps.clickSelector(action.selector, options, action.delay, action.navigation);
+                }
+                hasElement = true;
+                break;
             case ActionType.type:
-            await pageOps.typeSelector(action, action.data, options);
-            hasElement = true;
-            break;
+                if (action.xpath) {
+                    await pageOps.typeXPath(action.xpath, action.data, options);
+                } else {
+                    await pageOps.typeSelector(action.selector, action.data, options);
+                }
+                hasElement = true;
+                break;
             case ActionType.evaluate:
-            hasElement = await pageOps.clickEvaluate(action, action.delay, action.hidden, action.navigation);
-            break;
+                hasElement = await pageOps.clickEvaluate(action.selector, action.delay, action.hidden, action.navigation);
+                break;
         }
         
         console.log(`End: ${action.description}`);
