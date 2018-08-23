@@ -8,9 +8,13 @@ const timeout = config.timeout * 1000;
 let instanceCount = 0;
 
 class TMActionExecution {
-    constructor(actions) {
+    constructor(actions, creds) {
         this.actionList = actions;
         this.instanceID = instanceCount++;
+        if (Array.isArray(creds)) {
+            this.supportRandomCreds = true;
+            this.cred = creds[Math.floor(Math.random() * creds.length)];
+        }
     }
 
     async run () {
@@ -40,10 +44,24 @@ class TMActionExecution {
     }
 
     async _execute (pageOps, action) {
-        if (action.textbox) {
-            await pageOps.typeXPath('/' + action.data, action.value, undefined, action.interval * 1000);
-        } else {
-            await pageOps.clickXPath('/' + action.data, undefined, action.interval * 1000, action.navigation);
+        try {
+            if (action.textbox) {
+                if (this.supportRandomCreds && action.cred) {
+                    await pageOps.typeXPath('/' + action.data, this.cred[action.cred], undefined, action.interval * 1000);
+                } else {
+                    await pageOps.typeXPath('/' + action.data, action.value, undefined, action.interval * 1000);
+                }
+    
+            } else {
+                await pageOps.clickXPath('/' + action.data, undefined, action.interval * 1000, action.navigation);
+            }
+        } catch (err) {
+            if (!action.ignore) {
+                console.error(`InstanceID-${this.instanceID} Action Exeception: ${action.description}`);
+                throw err;
+            } else {
+                console.log(`InstanceID-${this.instanceID} Ignore Action Exeception: ${action.description}`);
+            }
         }
 
         console.log(`InstanceID-${this.instanceID} End: ${action.description}`);
