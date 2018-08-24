@@ -17,7 +17,7 @@ class TMActionExecution {
         this.instanceID = instanceCount++;
         if (Array.isArray(creds)) {
             this.supportRandomCreds = true;
-            this.cred = creds[Math.floor(Math.random() * creds.length)];
+            this.cred = creds[this.instanceID % creds.length];
         }
     }
 
