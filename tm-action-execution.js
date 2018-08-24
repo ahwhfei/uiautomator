@@ -2,14 +2,18 @@ const puppeteer = require('puppeteer');
 const config = require('./config.json');
 const ActionType = require('./action-type');
 const PageOps = require('./page-ops');
+const logger = require('./logger');
 
 const timeout = config.timeout * 1000;
 
 let instanceCount = 0;
+process.setMaxListeners(0);
 
 class TMActionExecution {
-    constructor(actions, creds) {
+    constructor(siteUrl, actions, creds, headless) {
+        this.siteUrl = siteUrl;
         this.actionList = actions;
+        this.headless = !!headless;
         this.instanceID = instanceCount++;
         if (Array.isArray(creds)) {
             this.supportRandomCreds = true;
@@ -21,7 +25,7 @@ class TMActionExecution {
         const width = config.windowWidth;
         const height = config.windowHeight;
         const browser = await puppeteer.launch({
-            headless: false,
+            headless: this.headless,
             args: [
                 `--window-size=${width},${height}`
             ]
@@ -30,17 +34,18 @@ class TMActionExecution {
         
         await page.setViewport({ width, height });
         await page.setDefaultNavigationTimeout(timeout);
-        await page.goto(config.siteUrl);
+        await page.goto(this.siteUrl || config.siteUrl);
 
         const pageOps = new PageOps(page);
         
         for (const action of this.actionList) {
-            console.log(`InstanceID-${this.instanceID} Start: ${action.description}`);
+            logger.log(this.instanceID, `InstanceID-${this.instanceID} Start: ${action.description}`);
             await this._execute(pageOps, action);
         }
     
         await page.waitFor(5000);
         await browser.close();
+        logger.log(this.instanceID, `=====InstanceID-${this.instanceID} Done!!!=====`);
     }
 
     async _execute (pageOps, action) {
@@ -57,14 +62,15 @@ class TMActionExecution {
             }
         } catch (err) {
             if (!action.ignore) {
-                console.error(`InstanceID-${this.instanceID} Action Exeception: ${action.description}`);
-                throw err;
+                logger.error(this.instanceID, `InstanceID-${this.instanceID} Action Exeception: ${action.description}`);
+                logger.error(this.instanceID, err.message);
+                throw null;
             } else {
-                console.log(`InstanceID-${this.instanceID} Ignore Action Exeception: ${action.description}`);
+                logger.log(this.instanceID, `InstanceID-${this.instanceID} Ignore Action Exeception: ${action.description}`);
             }
         }
 
-        console.log(`InstanceID-${this.instanceID} End: ${action.description}`);
+        logger.log(this.instanceID, `InstanceID-${this.instanceID} End: ${action.description}`);
     }
 }
 

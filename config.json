@@ -1,6 +1,6 @@
 {
     "siteUrl": "https://citrix.cloud.com",
-    "windowWidth": 1400,
-    "windowHeight": 800,
+    "windowWidth": 1200,
+    "windowHeight": 600,
     "timeout": 180
 }

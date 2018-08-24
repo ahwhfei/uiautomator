@@ -11,6 +11,8 @@ let parallelCount = 1;
 let rawContent;
 let actions;
 let creds;
+let siteUrl;
+let headless = false;
 const args = process.argv.slice(2).filter((arg) => {
     if (arg.match(/^(-+|\/)(h(elp)?|\?)$/)) {
         help = true;
@@ -18,6 +20,8 @@ const args = process.argv.slice(2).filter((arg) => {
         testSequenceFile = arg.split('=')[1];
     } else if (arg.indexOf('--parallel') === 0 || arg.indexOf('-p') === 0) {
         parallelCount = +arg.split('=')[1];
+    } else if (arg.indexOf('--headless') === 0) {
+        headless = true;
     }
 });
 
@@ -32,6 +36,7 @@ if (help) {
     log('')
     log('  -f, --file         Test sequence json file')
     log('  -p, --parallel     Parallel count')
+    log('      --headless     Head less chrome')
     process.exit(help ? 0 : 1)
 } else if (testSequenceFile) {
     try {
@@ -39,20 +44,17 @@ if (help) {
         const content = JSON.parse(rawContent);
         actions = content.data;
         creds = content.creds;
+        siteUrl = content.siteUrl;
     } catch (err) {
         console.log(err.message);
     }
 }
 
-if (!actions) {
-    actions = tmActionList.data;
-}
-
-if (!creds) {
-    creds = tmActionList.creds;
-}
+actions || (actions = tmActionList.data);
+creds || (creds = tmActionList.creds);
+siteUrl || (siteUrl = tmActionList.siteUrl);
 
 for (let i = 0; i < parallelCount; i++) {
-    const tmExecution = new TMActionExecution(actions, creds);
+    const tmExecution = new TMActionExecution(siteUrl, actions, creds, headless);
     tmExecution.run();
 }
