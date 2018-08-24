@@ -41,7 +41,6 @@ class TMActionExecution {
         for (const action of this.actionList) {
             logger.log(this.instanceID, `InstanceID-${this.instanceID} Start: ${action.description}`);
             await this._execute(pageOps, action);
-            await this._wait(3000);
         }
     
         await page.waitFor(5000);
@@ -63,12 +62,12 @@ class TMActionExecution {
                 }
     
             } else {
-                await pageOps.clickXPath('/' + action.data, undefined, action.interval * 1000, action.navigation);
+                await pageOps.clickXPath('/' + action.data, undefined, 0, action.navigation, action.interval * 1000);
             }
         } catch (err) {
             if (!action.ignore) {
                 logger.error(this.instanceID, `InstanceID-${this.instanceID} Action Exeception: ${action.description}`);
-                logger.error(this.instanceID, err.message);
+                logger.error(this.instanceID, err);
                 throw null;
             } else {
                 logger.log(this.instanceID, `InstanceID-${this.instanceID} Ignore Action Exeception: ${action.description}`);

@@ -121,12 +121,20 @@ var locateUniqueElement = (function() {
 
     // Find elements via XPath
     evaluate = function (selector, dom) {
-        return new XPathEvaluator().evaluate(
+        var snapshots = new XPathEvaluator().evaluate(
             '/' + selector, 
             dom || document.documentElement, // Use HTML BODY DOM to compare if dom parameter is null
             null, 
             XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
-            null);
+            null),
+            i,
+            result = [];
+
+        for (i=0; i<snapshots.snapshotLength; i++) {
+            result.push(snapshots.snapshotItem[i]);
+        }
+
+        return result;
     },
 
     // Define Operation mode: One Strict mode and 4 Maintaince modes
@@ -204,32 +212,37 @@ var locateUniqueElement = (function() {
      * @param {String} lastSelector - First recurrence, the param is empty string '', for record xpath selector each recurrence
      * @param {String} Use which mode to connect Xpath selector, strict mode, or loose mode.
      * @param {Object} dom - Optional parameter, DOM will be compared
+     * @param {Function} evaluateFunc - Evaluate xpath function
      * @returns {object} If found unique element, return the element DOM, otherwise return undefined
      */
-    locateUniqueElement = function (element, lastSelector, operationType, dom) {
+    locateUniqueElement = async function (element, lastSelector, operationType, dom, evaluateFunc) {
         var selector,
             result,
             newType;
 
         // Get Xpath selector
         selector = getSelector(element, lastSelector, operationType);
-        // Evaluate Xpath selctor in HTML DOM
-        result = evaluate(selector, dom);
 
-        if (result.snapshotLength === 1) { // Found unique element
+        // Evaluate Xpath selctor in HTML DOM
+        result = (typeof evaluateFunc === 'function') ? await evaluateFunc('/'+selector, dom) : evaluate(selector, dom);
+
+        if (result.length === 1) { // Found unique element
             // return element
-            return result.snapshotItem(0);
-        } else if (result.snapshotLength > 1 && getParentNode(element)) { // Found multiple elements
+            return {
+                xpath: '/'+selector,
+                element: result[0]
+            };
+        } else if (result.length > 1 && getParentNode(element)) { // Found multiple elements
             // use strict mode to lengthen xpath recursively
-            return locateUniqueElement(getParentNode(element), selector, OperationType.STRICT, dom);
-        } else if (result.snapshotLength === 0) { // Not found element, use maintenance mode
+            return await locateUniqueElement(getParentNode(element), selector, OperationType.STRICT, dom, evaluateFunc);
+        } else if (result.length === 0) { // Not found element, use maintenance mode
             newType = updateOperationType(operationType);
             if (!newType) {
                 // Current mode is already the most maintenace mode, locate failed
                 return undefined;
             }
 
-            return locateUniqueElement(element, lastSelector, newType, dom);
+            return await locateUniqueElement(element, lastSelector, newType, dom, evaluateFunc);
         } else if (!getParentNode(element)) {
             return undefined;
         } else {
@@ -241,10 +254,11 @@ var locateUniqueElement = (function() {
      * Locate unqiue element by finding element object stored before in a DOM
      * @param {Object | String} element - A element tree to record self attributes and parent relationship, or a XPath string as long as possible.
      * @param {Object} dom - Optional parameter, DOM will be compared
+     * @param {Function} evaluateFunc - Evaluate xpath function
      * @returns {object} If found unique element, return the element DOM, otherwise return undefined
      */
-    return function (element, dom) {
-        return locateUniqueElement(element, '', OperationType.STRICT, dom);
+    return async function (element, dom, evaluateFunc) {
+        return await locateUniqueElement(element, '', OperationType.STRICT, dom, evaluateFunc);
     };
 })();
 

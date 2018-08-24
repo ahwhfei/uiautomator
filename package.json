@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "puppeteer": "^1.6.2"
+    "puppeteer": "1.7.0"
   },
   "bin": {
     "uiautomator": "index.js"

@@ -1,3 +1,6 @@
+const { TimeoutError } = require('puppeteer/Errors');
+const findUniqueElement = require('./find-unique-element');
+
 class PageOps {
     constructor(page) {
         this.page = page;
@@ -27,19 +30,63 @@ class PageOps {
         }
     }
 
-    async clickXPath(xpath, options, delay, hasNavigation) {
+    async clickXPath(xpath, options, delay, hasNavigation, timeout) {
         let waitForNavigationPromise;
+        let waitOptions;
+
+        if (timeout && typeof timeout === 'number') {
+            waitOptions = {timeout};
+        }
+
+        if (typeof waitOptions === 'object') {
+            Object.assign(waitOptions, options);
+        } else {
+            waitOptions = options;
+        }
+
+        try {
+            if (typeof waitOptions === 'object') {
+                await this.page.waitForXPath(xpath, waitOptions);
+            } else {
+                await this.page.waitForXPath(xpath);
+            }
+        } catch(err) {
+            if (err instanceof TimeoutError) {
+                const result = await findUniqueElement(xpath, this.page);
+
+                if (!result) {
+                    throw new Error(`Do not find xpath ${xpath}`)
+                }
+
+                const element = result.element;
+
+                if (hasNavigation) {
+                    waitForNavigationPromise = this.page.waitForNavigation();
+                }
+        
+                try {
+                    await this.page.waitForXPath(result.xpath, {visible: true});
+                    await element.click();
+                } catch(err) {
+                    // Ignore when not visible
+                    if (err.messge !== 'Node is either not visible or not an HTMLElement') {
+                        throw err;
+                    }
+                }
+        
+                if (hasNavigation) {
+                    await waitForNavigationPromise;
+                }
+
+                return;
+            } else {
+                throw err;
+            }
+        }
 
         if (delay && typeof delay === 'number') {
             await this.page.waitFor(delay);
         }
-
-        if (typeof options === 'object') {
-            await this.page.waitForXPath(xpath, options);
-        } else {
-            await this.page.waitForXPath(xpath);
-        }
-
 
         if (hasNavigation) {
             waitForNavigationPromise = this.page.waitForNavigation();
@@ -126,9 +173,12 @@ class PageOps {
     async _clickByXPath(xpath) {
         const element = await this.page.$x(xpath);
         if (element && element.length === 1) {
+            await this.page.waitForXPath(xpath, {visible: true});
             await element[0].click();
+        } else if (element && element.length > 1){
+            throw new Error(`element is not unique ${xpath}`);
         } else {
-            throw new Error('element not found');
+            throw new Error(`element not found ${xpath}`);
         }
     }
 }
