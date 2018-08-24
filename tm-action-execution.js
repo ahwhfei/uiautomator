@@ -41,11 +41,16 @@ class TMActionExecution {
         for (const action of this.actionList) {
             logger.log(this.instanceID, `InstanceID-${this.instanceID} Start: ${action.description}`);
             await this._execute(pageOps, action);
+            await this._wait(3000);
         }
     
         await page.waitFor(5000);
         await browser.close();
         logger.log(this.instanceID, `=====InstanceID-${this.instanceID} Done!!!=====`);
+    }
+
+    async _wait (ms) {
+        return new Promise(resolve => setTimeout(() => resolve(), ms));
     }
 
     async _execute (pageOps, action) {
