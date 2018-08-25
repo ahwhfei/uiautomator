@@ -66,11 +66,11 @@ class TMActionExecution {
             }
         } catch (err) {
             if (!action.ignore) {
-                logger.error(this.instanceID, `InstanceID-${this.instanceID} Action Exeception: ${action.description}`);
-                logger.error(this.instanceID, err);
-                throw null;
+                logger.error(this.instanceID, `InstanceID-${this.instanceID} Action Exception: ${action.description}`);
+                logger.error(this.instanceID, err.message);
+                throw err;
             } else {
-                logger.log(this.instanceID, `InstanceID-${this.instanceID} Ignore Action Exeception: ${action.description}`);
+                logger.log(this.instanceID, `InstanceID-${this.instanceID} Ignore Action Exception: ${action.description}`);
             }
         }
 
