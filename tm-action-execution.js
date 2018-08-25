@@ -26,6 +26,7 @@ class TMActionExecution {
         const height = config.windowHeight;
         const browser = await puppeteer.launch({
             headless: this.headless,
+            timeout: timeout,
             args: [
                 `--window-size=${width},${height}`
             ]
