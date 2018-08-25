@@ -56,16 +56,19 @@ class ActionExecution {
     }
 
     async _execute (pageOps, action) {
+        const delay = (action.delay || 1) * 1000;
+        const timeout = action.interval * 1000;
+
         try {
             if (action.textbox) {
                 if (this.supportRandomCreds && action.cred) {
-                    await pageOps.typeXPath('/' + action.data, this.cred[action.cred], undefined, 1000, action.interval * 1000);
+                    await pageOps.typeXPath('/' + action.data, this.cred[action.cred], undefined, delay, timeout);
                 } else {
-                    await pageOps.typeXPath('/' + action.data, action.value, undefined, 1000, action.interval * 1000);
+                    await pageOps.typeXPath('/' + action.data, action.value, undefined, delay, timeout);
                 }
     
             } else {
-                await pageOps.clickXPath('/' + action.data, undefined, 1000, action.navigation, action.interval * 1000);
+                await pageOps.clickXPath('/' + action.data, undefined, delay, action.navigation, timeout);
             }
         } catch (err) {
             if (!action.ignore) {
