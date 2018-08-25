@@ -55,10 +55,14 @@ class PageOps {
                 const result = await findUniqueElement(xpath, this.page);
 
                 if (!result) {
-                    throw new Error(`Do not find xpath ${xpath}`)
+                    throw new Error(`Do not find unique element ${xpath}`)
                 }
 
                 const element = result.element;
+
+                if (delay && typeof delay === 'number') {
+                    await this.page.waitFor(delay);
+                }
 
                 if (hasNavigation) {
                     waitForNavigationPromise = this.page.waitForNavigation();
@@ -147,17 +151,9 @@ class PageOps {
         await this.page.keyboard.type(data);
     }
 
-    async typeXPath(xpath, data, options, delay) {
-        if (delay && typeof delay === 'number') {
-            await this.page.waitFor(delay);
-        }
+    async typeXPath(xpath, data, options, delay, timeout) {
 
-        if (typeof options === 'object') {
-            await this.page.waitForXPath(xpath, options);
-        } else {
-            await this.page.waitForXPath(xpath);
-        }
-        await this._clickByXPath(xpath);
+        this.clickXPath(xpath, options, delay, false, timout);
         await this.page.keyboard.type(data);
     }
 

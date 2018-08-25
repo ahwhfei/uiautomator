@@ -9,6 +9,9 @@
   "dependencies": {
     "puppeteer": "1.7.0"
   },
+  "engines": { 
+    "node" : ">=8.11.3"
+  },
   "bin": {
     "uiautomator": "index.js"
   },
