@@ -62,7 +62,7 @@ class TMActionExecution {
                 }
     
             } else {
-                await pageOps.clickXPath('/' + action.data, undefined, 0, action.navigation, action.interval * 1000);
+                await pageOps.clickXPath('/' + action.data, undefined, 1000, action.navigation, action.interval * 1000);
             }
         } catch (err) {
             if (!action.ignore) {

@@ -64,15 +64,7 @@ class PageOps {
                     waitForNavigationPromise = this.page.waitForNavigation();
                 }
         
-                try {
-                    await this.page.waitForXPath(result.xpath, {visible: true});
-                    await element.click();
-                } catch(err) {
-                    // Ignore when not visible
-                    if (err.messge !== 'Node is either not visible or not an HTMLElement') {
-                        throw err;
-                    }
-                }
+                await this._clickVisibleElement(element, result.xpath);
         
                 if (hasNavigation) {
                     await waitForNavigationPromise;
@@ -173,12 +165,23 @@ class PageOps {
     async _clickByXPath(xpath) {
         const element = await this.page.$x(xpath);
         if (element && element.length === 1) {
-            await this.page.waitForXPath(xpath, {visible: true});
-            await element[0].click();
+            await this._clickVisibleElement(element[0], xpath);
         } else if (element && element.length > 1){
             throw new Error(`element is not unique ${xpath}`);
         } else {
             throw new Error(`element not found ${xpath}`);
+        }
+    }
+
+    async _clickVisibleElement(element, xpath) {
+        try {
+            await this.page.waitForXPath(xpath, {visible: true, timeout: 1000});
+            await element.click();
+        } catch(err) {
+            // Ignore when not visible
+            if (err.messge !== 'Node is either not visible or not an HTMLElement') {
+                throw err;
+            }
         }
     }
 }
