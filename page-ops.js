@@ -179,8 +179,10 @@ class PageOps {
             await element.click();
         } catch(err) {
             // Ignore when not visible
-            if (err.messge !== 'Node is either not visible or not an HTMLElement') {
+            if (err.message !== 'Node is either not visible or not an HTMLElement') {
                 throw err;
+            } else {
+                console.error('Never running here');
             }
         }
     }
