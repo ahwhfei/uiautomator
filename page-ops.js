@@ -6,30 +6,6 @@ class PageOps {
         this.page = page;
     }
 
-    async clickSelector(selector, options, delay, hasNavigation) {
-        let waitForNavigationPromise;
-
-        if (typeof options === 'object') {
-            await this.page.waitFor(selector, options);
-        } else {
-            await this.page.waitFor(selector);
-        }
-
-        if (delay && typeof delay === 'number') {
-            await this.page.waitFor(delay);
-        }
-
-        if (hasNavigation) {
-            waitForNavigationPromise = this.page.waitForNavigation();
-        }
-
-        await this.page.click(selector);
-
-        if (hasNavigation) {
-            await waitForNavigationPromise;
-        }
-    }
-
     async clickXPath(xpath, options, delay, hasNavigation, timeout) {
         let waitForNavigationPromise;
         let waitOptions;
@@ -58,119 +34,62 @@ class PageOps {
                     throw new Error(`Do not find unique element ${xpath}`)
                 }
 
-                const element = result.element;
+                await this._clickWithDelayNavigation(result.xpath, delay, hasNavigation, this._clickByElement.bind(this), result.element);
 
-                if (delay && typeof delay === 'number') {
-                    await this.page.waitFor(delay);
-                }
-
-                if (hasNavigation) {
-                    waitForNavigationPromise = this.page.waitForNavigation();
-                }
-        
-                await this._clickVisibleElement(element, result.xpath);
-        
-                if (hasNavigation) {
-                    await waitForNavigationPromise;
-                }
-
+                // Return directly
                 return;
+
             } else {
                 throw err;
             }
         }
 
-        if (delay && typeof delay === 'number') {
-            await this.page.waitFor(delay);
-        }
-
-        if (hasNavigation) {
-            waitForNavigationPromise = this.page.waitForNavigation();
-        }
-
-        this._clickByXPath(xpath);
-
-        if (hasNavigation) {
-            await waitForNavigationPromise;
-        }
-    }
-
-    async clickEvaluate(selector, delay, hidden, hasNavigation) {
-        let waitForNavigationPromise;
-        let hasElement = false;
-
-        if (delay && typeof delay === 'number') {
-            await this.page.waitFor(delay);
-        }
-
-        // hasElement = await this.page.evaluate((s) => !!document.querySelector(s), selector);
-        // if (!hasElement) {
-        //     return hasElement;
-        // }
-
-        try {
-            await this.page.waitForSelector(selector, { visible: true, timeout: 1000 })
-            hasElement = true;
-        } catch (err) {
-            return false;
-        }
-
-        if (hasNavigation) {
-            waitForNavigationPromise = this.page.waitForNavigation();
-        }
-
-        let waitForSelectorHiddenPromise;
-        if (hidden) {
-            waitForSelectorHiddenPromise = this.page.waitForSelector(selector, { hidden: true, timeout: 180000 });
-        }
-        await this.page.click(selector);
-        if (hidden) {
-            await waitForSelectorHiddenPromise;
-        }
-
-        if (hasNavigation) {
-            await waitForNavigationPromise;
-        }
-
-        return hasElement;
-    }
-
-    async typeSelector(selector, data, options, delay) {
-
-        if (typeof options === 'object') {
-            await this.page.waitFor(selector, options);
-        } else {
-            await this.page.waitFor(selector);
-        }
-
-        if (delay && typeof delay === 'number') {
-            await this.page.waitFor(delay);
-        }
-
-        await this.page.click(selector);
-        await this.page.keyboard.type(data);
+        await this._clickWithDelayNavigation(xpath, delay, hasNavigation, this._clickByXPath.bind(this));
     }
 
     async typeXPath(xpath, data, options, delay, timeout) {
-        this.clickXPath(xpath, options, delay, false, timout);
+        await this.clickXPath(xpath, options, delay, false, timeout);
         await this.page.keyboard.type(data);
     }
 
     // Private methods
+    async _clickWithDelayNavigation(xpath, delay, hasNavigation, clickFunc, element) {
+        let waitForNavigationPromise;
+
+        if (delay && typeof delay === 'number') {
+            await this.page.waitFor(delay);
+        }
+
+        if (hasNavigation) {
+            waitForNavigationPromise = this.page.waitForNavigation();
+        }
+
+        if (typeof clickFunc === 'function') {
+            await clickFunc(xpath, element);
+        } else {
+            throw new Error('The 4th parameter type is not function');
+        }
+
+        if (hasNavigation) {
+            await waitForNavigationPromise;
+        }
+    }
+
     async _clickByXPath(xpath) {
-        const element = await this.page.$x(xpath);
-        if (element && element.length === 1) {
-            await this._clickVisibleElement(element[0], xpath);
-        } else if (element && element.length > 1){
+        const elements = await this.page.$x(xpath);
+        if (elements && elements.length === 1) {
+            await this._clickByElement(xpath, elements[0]);
+        } else if (elements && elements.length > 1){
             throw new Error(`element is not unique ${xpath}`);
         } else {
             throw new Error(`element not found ${xpath}`);
         }
     }
 
-    async _clickVisibleElement(element, xpath) {
+    async _clickByElement(xpath, element) {
         try {
-            await this.page.waitForXPath(xpath, {visible: true, timeout: 90000});
+            // TODO: the timeout is not good for hidden-able element
+            await this.page.waitForXPath(xpath, {visible: true, timeout: 59000});
             await element.click();
         } catch(err) {
             // Ignore when not visible
@@ -181,6 +100,7 @@ class PageOps {
             }
         }
     }
+
 }
 
 module.exports = PageOps;

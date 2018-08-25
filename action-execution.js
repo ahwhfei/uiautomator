@@ -2,16 +2,33 @@ const puppeteer = require('puppeteer');
 const config = require('./config.json');
 const ActionType = require('./action-type');
 const PageOps = require('./page-ops');
+const logger = require('./logger');
 
 const timeout = config.timeout * 1000;
 
-class ActionExecution {
+let instanceCount = 0;
+process.setMaxListeners(0);
 
-    async run (actionList) {
+class ActionExecution {
+    constructor(siteUrl, actions, creds, headless) {
+        this.siteUrl = siteUrl;
+        this.actionList = actions;
+        this.headless = !!headless;
+        this.instanceID = instanceCount++;
+        if (Array.isArray(creds)) {
+            this.supportRandomCreds = true;
+            this.cred = creds[this.instanceID % creds.length];
+        }
+    }
+
+    // call run function with await means serial calling
+    // without await means inparallel callding
+    async run () {
         const width = config.windowWidth;
         const height = config.windowHeight;
         const browser = await puppeteer.launch({
-            headless: false,
+            headless: this.headless,
+            timeout: timeout,
             args: [
                 `--window-size=${width},${height}`
             ]
@@ -20,52 +37,47 @@ class ActionExecution {
         
         await page.setViewport({ width, height });
         await page.setDefaultNavigationTimeout(timeout);
-        await page.goto(config.siteUrl);
+        await page.goto(this.siteUrl || config.siteUrl);
 
         const pageOps = new PageOps(page);
         
-        let canExecuteNextAction = undefined;
-        for (const action of actionList) {
-            console.log(`Start: ${action.description}`);
-            if ((action.checkLatestActionResult && canExecuteNextAction)
-                || !action.checkLatestActionResult) {
-                canExecuteNextAction = await this._execute(pageOps, action);
-            }
+        for (const action of this.actionList) {
+            logger.log(this.instanceID, `InstanceID-${this.instanceID} Start: ${action.description}`);
+            await this._execute(pageOps, action);
         }
     
         await page.waitFor(5000);
         await browser.close();
+        logger.log(this.instanceID, `=====InstanceID-${this.instanceID} Done!!!=====`);
+    }
+
+    async _wait (ms) {
+        return new Promise(resolve => setTimeout(() => resolve(), ms));
     }
 
     async _execute (pageOps, action) {
-        let options = {timeout};
-        action.visible && (options.visible = action.visible);
-        let hasElement = false;
-
-        switch(action.type) {
-            case ActionType.click:
-                if (action.xpath) {
-                    await pageOps.clickXPath(action.xpath, options, action.delay, action.navigation);
+        try {
+            if (action.textbox) {
+                if (this.supportRandomCreds && action.cred) {
+                    await pageOps.typeXPath('/' + action.data, this.cred[action.cred], undefined, 1000, action.interval * 1000);
                 } else {
-                    await pageOps.clickSelector(action.selector, options, action.delay, action.navigation);
+                    await pageOps.typeXPath('/' + action.data, action.value, undefined, 1000, action.interval * 1000);
                 }
-                hasElement = true;
-                break;
-            case ActionType.type:
-                if (action.xpath) {
-                    await pageOps.typeXPath(action.xpath, action.data, options);
-                } else {
-                    await pageOps.typeSelector(action.selector, action.data, options);
-                }
-                hasElement = true;
-                break;
-            case ActionType.evaluate:
-                hasElement = await pageOps.clickEvaluate(action.selector, action.delay, action.hidden, action.navigation);
-                break;
+    
+            } else {
+                await pageOps.clickXPath('/' + action.data, undefined, 1000, action.navigation, action.interval * 1000);
+            }
+        } catch (err) {
+            if (!action.ignore) {
+                logger.error(this.instanceID, `InstanceID-${this.instanceID} Action Exception: ${action.description}`);
+                logger.error(this.instanceID, err.message);
+                throw err;
+            } else {
+                logger.log(this.instanceID, `InstanceID-${this.instanceID} Ignore Action Exception: ${action.description}`);
+            }
         }
-        
-        console.log(`End: ${action.description}`);
-        return hasElement;
+
+        logger.log(this.instanceID, `InstanceID-${this.instanceID} End: ${action.description}`);
     }
 }
 
