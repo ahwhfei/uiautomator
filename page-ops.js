@@ -175,7 +175,7 @@ class PageOps {
 
     async _clickVisibleElement(element, xpath) {
         try {
-            await this.page.waitForXPath(xpath, {visible: true, timeout: 1000});
+            await this.page.waitForXPath(xpath, {visible: true, timeout: 25000});
             await element.click();
         } catch(err) {
             // Ignore when not visible
