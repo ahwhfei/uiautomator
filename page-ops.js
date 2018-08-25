@@ -152,7 +152,6 @@ class PageOps {
     }
 
     async typeXPath(xpath, data, options, delay, timeout) {
-
         this.clickXPath(xpath, options, delay, false, timout);
         await this.page.keyboard.type(data);
     }

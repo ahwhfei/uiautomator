@@ -18,17 +18,25 @@ const args = process.argv.slice(2).filter((arg) => {
         help = true;
     } else if (arg.indexOf('--file') === 0 || arg.indexOf('-f') === 0) {
         testSequenceFile = arg.split('=')[1];
+        if (typeof testSequenceFile === 'undefined') {
+            console.error('Invalid file name');
+            console.error('');
+        }
     } else if (arg.indexOf('--parallel') === 0 || arg.indexOf('-p') === 0) {
         parallelCount = +arg.split('=')[1];
-    } else if (arg.indexOf('--headless') === 0) {
+        if (!parallelCount) {
+            console.error('Invalid input');
+            console.error('');
+        }
+    } else if (arg.indexOf('--headless') === 0 || arg.indexOf('-l') === 0) {
         headless = true;
     }
 });
 
-if (help) {
+if (help || args.length === 0) {
     // If they didn't ask for help, then this is not a "success"
     var log = help ? console.log : console.error
-    log('Usage: uiautomator [<InputFile> <ParallelCount>]')
+    log('Usage: uiautomator -f=<InputFile> [ <ParallelCount>]')
     log('')
     log('  UI automation tool.')
     log('')
@@ -36,7 +44,7 @@ if (help) {
     log('')
     log('  -f, --file         Test sequence json file')
     log('  -p, --parallel     Parallel count')
-    log('      --headless     Head less chrome')
+    log('  -l, --headless     Head less chrome')
     process.exit(help ? 0 : 1)
 } else if (testSequenceFile) {
     try {
@@ -46,15 +54,13 @@ if (help) {
         creds = content.creds;
         siteUrl = content.siteUrl;
     } catch (err) {
-        console.log(err.message);
+        console.error(err.message);
+    }
+
+    for (let i = 0; i < parallelCount; i++) {
+        const tmExecution = new TMActionExecution(siteUrl, actions, creds, headless);
+        tmExecution.run();
     }
 }
 
-actions || (actions = tmActionList.data);
-creds || (creds = tmActionList.creds);
-siteUrl || (siteUrl = tmActionList.siteUrl);
 
-for (let i = 0; i < parallelCount; i++) {
-    const tmExecution = new TMActionExecution(siteUrl, actions, creds, headless);
-    tmExecution.run();
-}

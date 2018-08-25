@@ -10,7 +10,7 @@ module.exports = {
     log(id, message) {
         let spaces = '';
         for (let i=0; i<id; i++) {
-            spaces += '    ';
+            spaces += '  ';
         }
         console.log(spaces + message);
     }
