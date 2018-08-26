@@ -10,7 +10,8 @@
             "name": "Launch without Selection",
             "program": "${workspaceFolder}\\index.js",
             "args": [
-                "-f=data/wo-select-customer.json"
+                "-f=data/wo-select-customer.json",
+                "-p=4"
             ]
         }, {
             "type": "node",
@@ -19,7 +20,7 @@
             "program": "${workspaceFolder}\\index.js",
             "args": [
                 "-f=data/w-select-customer.json",
-                "-p=8"
+                "-p=11"
             ]
         }
     ]
