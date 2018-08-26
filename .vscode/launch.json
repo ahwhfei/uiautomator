@@ -7,10 +7,19 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Launch without Selection",
             "program": "${workspaceFolder}\\index.js",
             "args": [
                 "-f=data/wo-select-customer.json"
+            ]
+        }, {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch with Selection",
+            "program": "${workspaceFolder}\\index.js",
+            "args": [
+                "-f=data/w-select-customer.json",
+                "-p=8"
             ]
         }
     ]
