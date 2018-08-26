@@ -1,9 +1,9 @@
 const puppeteer = require('puppeteer');
 const config = require('./config.json');
-const ActionType = require('./action-type');
 const PageOps = require('./page-ops');
 const logger = require('./logger');
 const XPathUtilities = require('./xpath-utilities');
+const EvalUtilities = require('./eval-utilities');
 
 const timeout = config.timeout * 1000;
 
@@ -57,7 +57,9 @@ class ActionExecution {
     }
 
     async _execute (pageOps, action) {
+        EvalUtilities.convert(action);
         let {textbox, delay, interval, ignore, value, data, cred, navigation, description} = action;
+
         // Default to add 1s delay avoid click failure
         delay = (delay || 1) * 1000;
         interval = interval * 1000;
