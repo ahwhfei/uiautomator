@@ -19,6 +19,7 @@ class ActionExecution {
         if (Array.isArray(creds)) {
             this.hasCreds = true;
             this.cred = creds[this.instanceID % creds.length];
+            EvalUtilities.convert(this.cred);
         }
     }
 
@@ -60,16 +61,21 @@ class ActionExecution {
         EvalUtilities.convert(action);
         let {textbox, delay, interval, ignore, value, data, cred, navigation, description} = action;
 
+        let credValue;
+        if (this.hasCreds && cred) {
+            credValue = this.cred[cred];
+        }
+
         // Default to add 1s delay avoid click failure
         delay = (delay || 1) * 1000;
         interval = interval * 1000;
 
-        if (this.hasCreds && textbox && cred) {
-            value = this.cred[cred];
+        if (textbox && credValue) {
+            value = credValue;
         }
 
-        if (this.hasCreds && !textbox && cred) {
-            data = XPathUtilities.changeXPathText(data, this.cred[cred]);
+        if (!textbox && credValue) {
+            data = XPathUtilities.changeXPathText(data, credValue);
         }
 
         try {
