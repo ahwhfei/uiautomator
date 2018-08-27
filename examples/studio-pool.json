@@ -1,0 +1,76 @@
+{
+    "description": "Studio Pool Stress Testing",
+    "siteUrl": "https://citrix.cloud.com",
+    "creds": [
+        {
+            "username": "",
+            "password": "",
+            "displayName": ""
+        },
+        {
+            "username": "",
+            "password": "",
+            "displayName": ""
+        }
+    ],
+    "data": [
+        {
+            "description": "Enter username",
+            "data": "/body/div[@id=\"app\"]/main[@id=\"app-container\"]/div[@id=\"main\"]/div[1]/div[1][@id=\"login-box\"]/div[2][@id=\"right-side-container\"]/form/input[2][@id=\"username\"]",
+            "interval": 0,
+            "textbox": true,
+            "value": "",
+            "cred": "username"
+        },
+        {
+            "description": "Enter password",
+            "data": "/body/div[@id=\"app\"]/main[@id=\"app-container\"]/div[@id=\"main\"]/div[1]/div[1][@id=\"login-box\"]/div[2][@id=\"right-side-container\"]/form/input[3][@id=\"password\"]",
+            "interval": "1",
+            "textbox": true,
+            "value": "",
+            "cred": "password"
+        },
+        {
+            "description": "Click Sign in button",
+            "navigation": true,
+            "data": "/body/div[@id=\"app\"]/main[@id=\"app-container\"]/div[@id=\"main\"]/div[1]/div[1][@id=\"login-box\"]/div[2][@id=\"right-side-container\"]/form/input[4][@class=\"btn btn-default\"][@id=\"submit\"]",
+            "interval": "1"
+        },
+        {
+            "description": "Select a customer",
+            "navigation": true,
+            "data": "/body[@class=\"navbar-loading-background ctx-modal-open\"]/div[2][@class=\"ng-isolate-scope cwc-isolate-navbar\"]/div[@class=\"ctx-modal ctx-modal-fade ctx-modal-in\"]/div[@class=\"ctx-modal-dialog\"]/div[@class=\"ctx-modal-dialog-content\"]/div[@class=\"cwc-isolate-navbar ng-scope\"]/div[@class=\"cwc-select-customer-modal no-text-select\"]/div[@class=\"ctx-modal-body\"]/ctx-scroll-select[@class=\"ng-isolate-scope\"]/div[@class=\"ctx-scroll-select-outer-box customer-list\"]/div[@class=\"ctx-scroll-select-inner-box customer-list-scroll-box\"]/ctx-scroll-select-item[1][@class=\"ng-scope ng-isolate-scope\"]/div[@class=\"ctx-scroll-select-item customer-list-item\"]/span[@class=\"ng-binding ng-scope\"][.=\"qiandev32\"]",
+            "interval": 13,
+            "cred": "displayName"
+        },
+        {
+            "description": "Close pendo guide dialog",
+            "data": "/div[@class=\" _pendo-guide-container_\"]/button[@id=\"_pendo-close-guide_\"]",
+            "interval": 20,
+            "ignore": true
+        },
+        {
+            "description": "Click Manage button in CC",
+            "navigation": true,
+            "data": "/body/ctx-app/div[@class=\"ctx-app\"]/ctx-shell[@class=\"ng-star-inserted\"]/div[@class=\"shell-content shell-content-hidden\"]/ctx-dashboard[@class=\"ng-star-inserted\"]/div[@class=\"ctx-dashboard\"]/ctx-dashboard-services/div[@class=\"ctx-dashboard-services\"]/div[1][@class=\"ctx-dashboard-services-my-services ng-star-inserted\"]/ctx-dashboard-services-group[@class=\"ctx-dashboard-services-my-services-group\"]/div[@class=\"ctx-dashboard-services-group\"]/div[2][@class=\"ctx-dashboard-services-group-content\"]/ctxgrid[@class=\"ng-star-inserted\"]/div[@class=\"ctx-grid-container\"]/div[3][@class=\"ng-star-inserted\"]/ctxgridtile[@class=\"ctx-dashboard-services-group-content-tile\"]/div[@class=\"ctx-tile ctx-tile-shadow-container ctx-tile-shadow\"]/div[@class=\"ctx-tile-shadow-block\"]/ctx-dashboard-services-tile/div[@class=\"ctx-dashboard-services-tile tag-class-xaxd-service-profile-devcp1\"]/div[2][@class=\"ctx-dashboard-services-tile-inner\"]/div[3][@class=\"ctx-dashboard-services-tile-inner-button ng-star-inserted\"]/ctx-spinner-2[@class=\"ctx-dashboard-services-tile-inner-button-spinner\"]/div[@class=\"ctx-spinner-content ng-star-inserted\"]/div[@class=\"ctx-dashboard-services-tile-inner-button-inner overflow-ellipsis ctx-dashboard-services-tile-inner-button-alternate\"][.=\"\n                    Manage\n                \"]",
+            "interval": 20
+        },
+        {
+            "description": "Click Manage menu in XenApp",
+            "data": "/body/app[@class=\"xd-content\"]/navbar[@class=\"ng-tns-c1-0 ng-star-inserted\"]/div[@class=\"xd-navbar xd-navbar-color-light\"]/div[@class=\"xd-navbar-menu xd-navbar-color-light\"]/ul[1][@class=\"xd-navbar-left xd-navbar-color-light\"]/li[2][@class=\"ng-tns-c1-0 ng-trigger ng-trigger-zoomIn ng-star-inserted\"]/a[1][@class=\"ng-tns-c1-0 has-dropdown\"][.=\"Manage\"]",
+            "interval": 120
+        },
+        {
+            "description": "Click right-top menu",
+            "data": "/body/cwc-navbar[@class=\"ng-scope ng-isolate-scope\"]/div[@class=\"cwc-isolate-navbar ng-scope\"]/div[@class=\"cwc-navbar \"]/div[3][@class=\"pull-right\"]/div[2][@class=\"username-container vmid \"]/div[@class=\"vmid w100 ng-isolate-scope\"]/div[@class=\"ctx-spinner-content\"]/div[@class=\"username-dropdown\"]/div[1][@class=\"username-icon-container-outer\"][@id=\"username-icon-standard\"]/ctx-icon[@class=\"ng-isolate-scope\"][@id=\"username-icon-standard\"]/div[@class=\"ctx-icon-container icon-xs-container username-icon-container white  \"]/div[@class=\"ctx-icon icon icon-arrow-down icon-xs \"]",
+            "interval": "20",
+            "delay": "{ 60 + Math.ceil(Math.random() * 100) }"
+        },
+        {
+            "description": "Click Sign out menu",
+            "navigation": true,
+            "data": "/body/cwc-navbar[@class=\"cwc-navbar ng-scope ng-isolate-scope\"]/div[@class=\"cwc-isolate-navbar ng-scope\"]/div[@class=\"cwc-navbar Virtual Apps and Desktops Service\"]/div[4][@class=\"pull-right\"]/div[2][@class=\"username-container vmid Virtual Apps and Desktops Service\"]/div[@class=\"vmid w100 ng-isolate-scope\"]/div[@class=\"ctx-spinner-content\"]/div[@class=\"username-dropdown Virtual Apps and Desktops Service open\"]/div[2][@class=\"cwc-dropdown-menu username-menu Virtual Apps and Desktops Service\"]/div[4][@class=\"cwc-menu-item\"]/a/span[@class=\"vmid ng-binding\"][.=\"Sign Out\"]",
+            "interval": "3"
+        }
+    ]
+}

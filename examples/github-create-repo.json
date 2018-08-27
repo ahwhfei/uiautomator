@@ -1,0 +1,96 @@
+{
+    "description": "Demo to create a repo",
+    "siteUrl": "https://github.com/",
+    "creds": [
+        {
+            "username": "",
+            "password": ""
+        }
+    ],
+    "data": [
+        {
+            "description": "Click sign in menu",
+            "data": "/body[@class=\"logged-out env-production page-responsive min-width-0 f4\"]/div[1][@class=\"position-relative js-header-wrapper \"]/header[@class=\"Header header-logged-out js-details-container Details position-relative f4 py-3\"]/div[@class=\"container-lg d-lg-flex p-responsive\"]/div[2][@class=\"HeaderMenu d-lg-flex flex-justify-between flex-auto\"]/div[@class=\"d-lg-flex\"]/span[@class=\"d-block d-lg-inline-block\"]/div[@class=\"HeaderNavlink px-0 py-2 m-0\"]/a[1][@class=\"text-bold text-white no-underline\"][.=\"Sign in\"]",
+            "interval": 2,
+            "navigation": true
+        },
+        {
+            "description": "Enter username",
+            "data": "/body[@class=\"logged-out env-production page-responsive min-width-0 session-authentication intent-mouse\"]/div[3][@class=\"application-main \"]/div[1][@id=\"js-pjax-container\"]/div[@class=\"auth-form px-3\"][@id=\"login\"]/form/div[3][@class=\"auth-form-body mt-3\"]/input[1][@class=\"form-control input-block\"][@id=\"login_field\"]",
+            "interval": 2,
+            "textbox": true,
+            "value": "",
+            "cred": "username"
+        },
+        {
+            "description": "Enter password",
+            "data": "/body[@class=\"logged-out env-production page-responsive min-width-0 session-authentication intent-mouse\"]/div[3][@class=\"application-main \"]/div[1][@id=\"js-pjax-container\"]/div[@class=\"auth-form px-3\"][@id=\"login\"]/form/div[3][@class=\"auth-form-body mt-3\"]/input[2][@class=\"form-control form-control input-block\"][@id=\"password\"]",
+            "interval": 2,
+            "textbox": true,
+            "value": "",
+            "cred": "password"
+        },
+        {
+            "description": "Click sign in button",
+            "data": "/body[@class=\"logged-out env-production page-responsive min-width-0 session-authentication intent-mouse\"]/div[3][@class=\"application-main \"]/div[1][@id=\"js-pjax-container\"]/div[@class=\"auth-form px-3\"][@id=\"login\"]/form/div[3][@class=\"auth-form-body mt-3\"]/input[3][@class=\"btn btn-primary btn-block\"]",
+            "interval": 2,
+            "navigation": true
+        },
+        {
+            "description": "Click New repository",
+            "data": "/body[@class=\"logged-in env-production page-dashboard \"]/div[4][@class=\"application-main \"]/div[1][@id=\"js-pjax-container\"]/div[@class=\"container\"]/div[@class=\"dashboard columns\"][@id=\"dashboard\"]/div[1][@class=\"dashboard-sidebar column one-third pr-5 pt-3\"]/div[1][@class=\"Box Box--condensed Details js-repos-container my-3\"]/div[1][@class=\"Box-header\"]/h3[@class=\"Box-title d-flex flex-justify-between flex-items-center\"]/a[@class=\"btn btn-sm btn-primary text-white\"][.=\"New repository\"]",
+            "interval": 10,
+            "navigation": true
+        },
+        {
+            "description": "Enter repository name",
+            "data": "/body[@class=\"logged-in env-production page-new-repo\"]/div[4][@class=\"application-main \"]/div[1][@id=\"js-pjax-container\"]/div[@class=\"new-repo-container\"]/form[@class=\"js-braintree-encrypt\"][@id=\"new_repository\"]/div[2][@class=\"owner-reponame clearfix\"]/auto-check/dl[@class=\"form-group float-left js-with-permission-fields\"]/dd/input[@class=\"form-control js-repo-name short\"][@id=\"repository_name\"]",
+            "interval": 2,
+            "textbox": true,
+            "value": "helloworld"
+        },
+        {
+            "description": "Click Create repository button",
+            "data": "/body[@class=\"logged-in env-production page-new-repo\"]/div[4][@class=\"application-main \"]/div[1][@id=\"js-pjax-container\"]/div[@class=\"new-repo-container\"]/form[@class=\"js-braintree-encrypt\"][@id=\"new_repository\"]/div[3][@class=\"js-with-permission-fields\"]/button[@class=\"btn btn-primary first-in-line\"][.=\"\n        Create repository\n      \"]",
+            "interval": 2,
+            "navigation": true
+        },
+        {
+            "description": "Click Settings",
+            "data": "/body[@class=\"logged-in env-production\"]/div[4][@class=\"application-main \"]/div/div[@id=\"js-repo-pjax-container\"]/div[1][@class=\"pagehead repohead instapaper_ignore readability-menu experiment-repo-nav  \"]/nav[@class=\"reponav js-repo-nav js-sidenav-container-pjax container\"]/a[4][@class=\"js-selected-navigation-item reponav-item\"][.=\"\n      \n      Settings\n\"]",
+            "interval": 10,
+            "navigation": true
+        },
+        {
+            "description": "Delete repository",
+            "data": "/body[@class=\"logged-in env-production intent-mouse\"]/div[4][@class=\"application-main \"]/div/div[@id=\"js-repo-pjax-container\"]/div[2][@class=\"container new-discussion-timeline experiment-repo-nav  \"]/div[1][@class=\"repository-content \"]/div[@class=\"columns\"]/div[2][@class=\"column three-fourths\"]/div[@id=\"options_bucket\"]/div[8][@class=\"Box Box--danger\"]/ul/li[4][@class=\"Box-row\"]/details[@class=\"details-reset details-overlay details-overlay-dark\"]/summary[@class=\"btn btn-danger boxed-action\"][.=\"\n      Delete this repository\n    \"]",
+            "interval": 10
+        },
+        {
+            "description": "Enter repo name to double confirm",
+            "data": "/body[@class=\"logged-in env-production intent-mouse\"]/div[4][@class=\"application-main \"]/div/div[@id=\"js-repo-pjax-container\"]/div[2][@class=\"container new-discussion-timeline experiment-repo-nav  \"]/div[1][@class=\"repository-content \"]/div[@class=\"columns\"]/div[2][@class=\"column three-fourths\"]/div[@id=\"options_bucket\"]/div[8][@class=\"Box Box--danger\"]/ul/li[4][@class=\"Box-row\"]/details[@class=\"details-reset details-overlay details-overlay-dark\"]/details-dialog[@class=\"Box Box--overlay d-flex flex-column anim-fade-in fast\"]/div[3][@class=\"Box-body overflow-auto\"]/form[@class=\"js-normalize-submit\"]/p/input[@class=\"form-control input-block\"]",
+            "interval": 10,
+            "textbox": true,
+            "navigation": true,
+            "value": "helloworld"
+        },
+        {
+            "description": "Click delete after confirm",
+            "data": "/body[@class=\"logged-in env-production intent-mouse\"]/div[4][@class=\"application-main \"]/div/div[@id=\"js-repo-pjax-container\"]/div[2][@class=\"container new-discussion-timeline experiment-repo-nav  \"]/div[1][@class=\"repository-content \"]/div[@class=\"columns\"]/div[2][@class=\"column three-fourths\"]/div[@id=\"options_bucket\"]/div[8][@class=\"Box Box--danger\"]/ul/li[4][@class=\"Box-row\"]/details[@class=\"details-reset details-overlay details-overlay-dark\"]/details-dialog[@class=\"Box Box--overlay d-flex flex-column anim-fade-in fast\"]/div[3][@class=\"Box-body overflow-auto\"]/form[@class=\"js-normalize-submit\"]/button[@class=\"btn btn-block btn-danger\"][.=\"I understand the consequences, delete this repository\"]",
+            "interval": 2,
+            "navigation": true
+        },
+        {
+            "description": "Click dropdown menu",
+            "data": "/body[@class=\"logged-in env-production page-dashboard intent-mouse\"]/div[1][@class=\"position-relative js-header-wrapper \"]/header[@class=\"Header  f5\"]/div[@class=\"d-flex flex-justify-between px-3 container-lg\"]/div[2][@class=\"HeaderMenu d-flex flex-justify-between flex-auto\"]/div[2][@class=\"d-flex\"]/ul[@class=\"user-nav d-flex flex-items-center list-style-none\"][@id=\"user-links\"]/li[3][@class=\"dropdown\"]/details[@class=\"details-overlay details-reset d-flex pl-2 flex-items-center\"]/summary[@class=\"HeaderNavlink name mt-1\"]/span[@class=\"dropdown-caret\"]",
+            "interval": 10
+        },
+        {
+            "description": "Click sign out",
+            "data": "/body[@class=\"logged-in env-production page-dashboard intent-mouse\"]/div[1][@class=\"position-relative js-header-wrapper \"]/header[@class=\"Header  f5\"]/div[@class=\"d-flex flex-justify-between px-3 container-lg\"]/div[2][@class=\"HeaderMenu d-flex flex-justify-between flex-auto\"]/div[2][@class=\"d-flex\"]/ul[@class=\"user-nav d-flex flex-items-center list-style-none\"][@id=\"user-links\"]/li[3][@class=\"dropdown\"]/details[@class=\"details-overlay details-reset d-flex pl-2 flex-items-center\"]/details-menu[@class=\"dropdown-menu dropdown-menu-sw\"]/ul/li[10]/form[@class=\"logout-form\"]/button[@class=\"dropdown-item dropdown-signout\"][.=\"\n                Sign out\n              \"]",
+            "interval": 5,
+            "delay": 1,
+            "navigation": true
+        }
+    ]
+}

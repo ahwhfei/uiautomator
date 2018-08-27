@@ -1,0 +1,24 @@
+{
+    "description": "",
+    "siteUrl": "",
+    "creds": [
+        {
+            "username": "",
+            "password": "",
+            "displayName": ""
+        }
+    ],
+    "data": [
+        {
+            "description": "",
+            "data": "",
+            "interval": 2,
+            "delay": 1,
+            "textbox": true,
+            "navigation": true,
+            "ignore": true,
+            "value": "",
+            "cred": "username"
+        }
+    ]
+}
