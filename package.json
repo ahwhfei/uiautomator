@@ -1,6 +1,6 @@
 {
   "name": "uiauto",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "UI Automation CLI tool",
   "main": "index.js",
   "scripts": {
