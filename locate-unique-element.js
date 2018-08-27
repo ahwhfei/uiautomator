@@ -15,7 +15,8 @@ var locateUniqueElement = (function() {
             result = '';
 
         if (typeof element === 'string') {
-            matched = getLastPath(element).match(/(\[\..*?\])/isgm);
+            // TODO: remove regex "s" flag because lower version of node is not support
+            matched = getLastPath(element).match(/(\[\..*?\])/igm);
             result = (matched && matched[0]) || '';
         } else if (typeof element === 'object') {
             result = (element.text ? ('[.="' + element.text + '"]') : '');
