@@ -1,42 +1,30 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
+const commandLineArgs = require('command-line-args');
+
 const ActionExecution = require('./action-execution');
 
-let help = false;
-let testSequenceFile;
-let parallelCount = 1;
+const optionDefinitions = [
+    { name: 'help', alias: 'h', type: Boolean },
+    { name: 'file', alias: 'f', type: String, defaultOption: true },
+    { name: 'headless', alias: 'l', type: Boolean },
+    { name: 'parallel', alias: 'p', type: Number, defaultValue: 1 },
+    { name: 'timeout', alias: 't', type: Number },
+    { name: 'serial', alias: 's', type: Number }
+];
+
 let rawContent;
 let actions;
 let creds;
 let siteUrl;
-let headless = false;
 const args = process.argv.slice(2);
+const options = commandLineArgs(optionDefinitions);
 
-args.forEach((arg) => {
-    if (arg.match(/^(-+|\/)(h(elp)?|\?)$/)) {
-        help = true;
-    } else if (arg.indexOf('--file') === 0 || arg.indexOf('-f') === 0) {
-        testSequenceFile = arg.split('=')[1];
-        if (typeof testSequenceFile === 'undefined') {
-            console.error('Invalid file name');
-            console.error('');
-        }
-    } else if (arg.indexOf('--parallel') === 0 || arg.indexOf('-p') === 0) {
-        parallelCount = +arg.split('=')[1];
-        if (!parallelCount) {
-            console.error('Invalid input');
-            console.error('');
-        }
-    } else if (arg.indexOf('--headless') === 0 || arg.indexOf('-l') === 0) {
-        headless = true;
-    }
-});
-
-if (help || !args.length) {
+if (options.help || !args.length) {
     // If they didn't ask for help, then this is not a "success"
-    var log = help ? console.log : console.error
-    log('Usage: uiautomator -f=<InputFile> [ <ParallelCount>]')
+    var log = options.help ? console.log : console.error
+    log('Usage: uiauto <InputFile> [ <ParallelCount> ]')
     log('')
     log('  UI automation tool.')
     log('')
@@ -45,10 +33,10 @@ if (help || !args.length) {
     log('  -f, --file         Test sequence json file')
     log('  -p, --parallel     Parallel count')
     log('  -l, --headless     Head less chrome')
-    process.exit(help ? 0 : 1)
-} else if (testSequenceFile) {
+    process.exit(options.help ? 0 : 1)
+} else if (options.file) {
     try {
-        rawContent = fs.readFileSync(testSequenceFile, 'utf8');
+        rawContent = fs.readFileSync(options.file, 'utf8');
         const content = JSON.parse(rawContent);
         actions = content.data;
         creds = content.creds;
@@ -57,8 +45,8 @@ if (help || !args.length) {
         console.error(err.message);
     }
 
-    for (let i = 0; i < parallelCount; i++) {
-        const execution = new ActionExecution(siteUrl, actions, creds, headless);
+    for (let i = 0; i < options.parallel; i++) {
+        const execution = new ActionExecution(siteUrl, actions, creds, options.headless);
         // without await means inparallel call
         execution.run();
     }
