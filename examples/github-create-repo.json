@@ -4,7 +4,8 @@
     "creds": [
         {
             "username": "",
-            "password": ""
+            "password": "",
+            "repoName": "helloworld"
         }
     ],
     "data": [
@@ -47,12 +48,14 @@
             "data": "/body[@class=\"logged-in env-production page-new-repo\"]/div[4][@class=\"application-main \"]/div[1][@id=\"js-pjax-container\"]/div[@class=\"new-repo-container\"]/form[@class=\"js-braintree-encrypt\"][@id=\"new_repository\"]/div[2][@class=\"owner-reponame clearfix\"]/auto-check/dl[@class=\"form-group float-left js-with-permission-fields\"]/dd/input[@class=\"form-control js-repo-name short\"][@id=\"repository_name\"]",
             "interval": 2,
             "textbox": true,
-            "value": "helloworld"
+            "value": "",
+            "cred": "repoName"
         },
         {
             "description": "Click Create repository button",
             "data": "/body[@class=\"logged-in env-production page-new-repo\"]/div[4][@class=\"application-main \"]/div[1][@id=\"js-pjax-container\"]/div[@class=\"new-repo-container\"]/form[@class=\"js-braintree-encrypt\"][@id=\"new_repository\"]/div[3][@class=\"js-with-permission-fields\"]/button[@class=\"btn btn-primary first-in-line\"][.=\"\n        Create repository\n      \"]",
-            "interval": 2,
+            "interval": 5,
+            "delay": 5,
             "navigation": true
         },
         {
@@ -72,7 +75,8 @@
             "interval": 10,
             "textbox": true,
             "navigation": true,
-            "value": "helloworld"
+            "value": "",
+            "cred": "repoName"
         },
         {
             "description": "Click delete after confirm",

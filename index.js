@@ -31,7 +31,8 @@ if (options.help || !args.length) {
     log('Options:')
     log('')
     log('  -f, --file         Test sequence json file')
-    log('  -p, --parallel     Parallel count')
+    log('  -p, --parallel     Parallel execution count')
+    log('  -s, --serial       Serial execution count')
     log('  -l, --headless     Head less chrome')
     process.exit(options.help ? 0 : 1)
 } else if (options.file) {
@@ -45,9 +46,18 @@ if (options.help || !args.length) {
         console.error(err.message);
     }
 
-    for (let i = 0; i < options.parallel; i++) {
-        const execution = new ActionExecution(siteUrl, actions, creds, options.headless);
-        // without await means inparallel call
-        execution.run();
+    if (options.serial) {
+        (async () => {
+            for (let i = 0; i < options.serial; i++) {
+                const execution = new ActionExecution(siteUrl, actions, creds, options.headless);
+                await execution.run();
+            }
+        })();
+    } else {
+        for (let i = 0; i < options.parallel; i++) {
+            const execution = new ActionExecution(siteUrl, actions, creds, options.headless);
+            // without await means in parallel call
+            execution.run();
+        }
     }
 }

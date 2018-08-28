@@ -39,7 +39,7 @@ class ActionExecution {
         
         await page.setViewport({ width, height });
         await page.setDefaultNavigationTimeout(timeout);
-        await page.goto(this.siteUrl || config.siteUrl);
+        await page.goto(this.siteUrl);
 
         const pageOps = new PageOps(page);
         
