@@ -87,3 +87,11 @@ uiatuo "github-create-repo.json" -s 5
 
 # Why use a full XPath
 Using a ful XPath with more details(class, id, sibiling index, text value) and top to BODY. Because used a dynamica locating a algorithm, which help to resolve XPath break when page changed, for example, the position of parent or brother elements is changed. The sytle changed such as class name updated.
+
+# Support JavaScript expression
+All fields support to JavaScript expression, for example:
+
+Set *delay* as 60-160 seconds
+```javascript
+"delay": "{ 60 + Math.ceil(Math.random()*100) }"
+```
