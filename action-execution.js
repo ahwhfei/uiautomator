@@ -4,18 +4,22 @@ const PageOps = require('./page-ops');
 const logger = require('./logger');
 const XPathUtilities = require('./xpath-utilities');
 const EvalUtilities = require('./eval-utilities');
-
-const timeout = config.timeout * 1000;
+const options = require('./options');
 
 let instanceCount = 0;
+// Disable warning of Max listeners
 process.setMaxListeners(0);
 
 class ActionExecution {
-    constructor(siteUrl, actions, creds, headless) {
-        this.siteUrl = siteUrl;
-        this.actionList = actions;
-        this.headless = !!headless;
+    constructor(context) {
+        this.siteUrl = context.siteUrl;
+        this.actionList = context.data;
+        this.headless = !!options.headless;
         this.instanceID = instanceCount++;
+
+        this.timeout = (options.timeout || config.timeout) * 1000;
+
+        const creds = context.creds;
         if (Array.isArray(creds)) {
             this.hasCreds = true;
             this.cred = creds[this.instanceID % creds.length];
@@ -30,7 +34,7 @@ class ActionExecution {
         const height = config.windowHeight;
         const browser = await puppeteer.launch({
             headless: this.headless,
-            timeout: timeout,
+            timeout: this.timeout,
             args: [
                 `--window-size=${width},${height}`
             ]
@@ -38,7 +42,7 @@ class ActionExecution {
         const page = await browser.newPage();
         
         await page.setViewport({ width, height });
-        await page.setDefaultNavigationTimeout(timeout);
+        await page.setDefaultNavigationTimeout(this.timeout);
         await page.goto(this.siteUrl);
 
         const pageOps = new PageOps(page);
@@ -48,8 +52,10 @@ class ActionExecution {
             await this._execute(pageOps, action);
         }
     
-        await page.waitFor(5000);
-        await browser.close();
+        if (!options.noquit) {
+            await page.waitFor(5000);
+            await browser.close();
+        }
         logger.log(this.instanceID, `=====InstanceID-${this.instanceID} Done!!!=====`);
     }
 
