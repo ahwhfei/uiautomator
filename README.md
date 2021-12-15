@@ -95,3 +95,11 @@ Set *delay* as 60-160 seconds
 ```javascript
 "delay": "{ 60 + Math.ceil(Math.random()*100) }"
 ```
+
+
+国内安装puppeteer
+```
+npm i --save puppeteer --ignore-scripts
+npm config set PUPPETEER_DOWNLOAD_HOST=https://npm.taobao.org/mirrors
+npm install --save puppeteer
+```

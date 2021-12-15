@@ -1,0 +1,55 @@
+{
+    "description": "幼儿园体温打卡",
+    "siteUrl": "https://health.tripaway.cn/html/health/temp-record.html?ver=1.0.32",
+    "creds": [
+        {
+            "username": "",
+            "password": ""
+        }
+    ],
+    "data": [
+        {
+            "description": "输入用户名",
+            "data": "/body/div[1][@class=\"wrap-all bgfff\"]/div[2][@class=\"mainDiv borderRadius2r\"]/div[@class=\"wid95Per marginAu p-rela\"]/form[@id=\"assetsForm\"]/div[@class=\"pdTd5 wid95Per marginAu\"]/div[1][@class=\"listOne\"]/input[1][@id=\"num\"]",
+            "interval": 2,
+            "textbox": true,
+            "value": "",
+            "cred": "username"
+        },
+        {
+            "description": "输入密码",
+            "data": "/body/div[1][@class=\"wrap-all bgfff\"]/div[2][@class=\"mainDiv borderRadius2r\"]/div[@class=\"wid95Per marginAu p-rela\"]/form[@id=\"assetsForm\"]/div[@class=\"pdTd5 wid95Per marginAu\"]/div[5][@class=\"listOne\"]/input[@id=\"pass\"]",
+            "interval": 2,
+            "textbox": true,
+            "value": "",
+            "cred": "password"
+        },
+        {
+            "description": "点击登录",
+            "data": "/body/div[@class=\"wrap-all bgfff\"]/div[2][@class=\"mainDiv borderRadius2r\"]/div[@class=\"wid95Per marginAu p-rela\"]/form[@id=\"assetsForm\"]/div[@class=\"pdTd5 wid95Per marginAu\"]/div[6][@class=\"sign\"]/a[@class=\"signA borderRadiusD2r log-btn\"][.=\"登录\"]",
+            "interval": 2,
+            "navigation": true
+        },
+        {
+            "description": "点击添加",
+            "data": "/body/div[1][@class=\"wrap-all bgf5 pdBom\"]/div[2][@class=\"wid90Per marginAu\"]/div[2][@class=\"wid40Per marginAu pdT2\"]/div[@class=\"div80pImg\"]/img",
+            "interval": 2,
+            "navigation": true
+        },
+        {
+            "description": "点击展开",
+            "data": "/body/div[1][@class=\"maskTab\"]/div[@class=\"maskTDiv borderRadiusD5r\"]/div[2][@class=\"xzTabDiv\"]/div[2][@class=\"cS\"]/div[@class=\"wid90Per marginAu\"]/div[1][@class=\"clearfix pdTBd5\"]/div[2][@class=\"f_right mgTd2\"][@id=\"show\"]/span[@class=\"sTx\"][.=\"展开\"]",
+            "interval": 2
+        },
+        {
+            "description": "选择健康",
+            "data": "/body/div[1][@class=\"maskTab\"]/div[@class=\"maskTDiv borderRadiusD5r\"]/div[2][@class=\"xzTabDiv\"]/div[2][@class=\"cS\"]/div[@class=\"wid90Per marginAu\"]/div[2][@class=\"remarks\"][@id=\"box\"]/div[1][@class=\"clearfix bzDiv remark \"]/div[2][@class=\"f_right\"]/span[@class=\"checkSp\"][.=\" \"]",
+            "interval": 2
+        },
+        {
+            "description": "选择提交",
+            "data": "/body/div[1][@class=\"maskTab\"]/div[@class=\"maskTDiv borderRadiusD5r\"]/div[2][@class=\"xzTabDiv\"]/div[3][@class=\"tjBtn\"]/div[@class=\"wid90Per marginAu\"]/a[@class=\"tjA borderRadiusD2r\"][.=\"提交\"]",
+            "interval": 2
+        }
+    ]
+}
